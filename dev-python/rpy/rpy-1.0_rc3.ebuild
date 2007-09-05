@@ -30,6 +30,7 @@ src_compile() {
 }
 
 src_install() {
+	cd $MY_P
 	distutils_src_install
 	# add R libs to ld.so.conf
 	doenvd "${FILESDIR}/90rpy"
