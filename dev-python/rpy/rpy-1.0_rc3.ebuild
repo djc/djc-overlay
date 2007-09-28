@@ -24,7 +24,7 @@ RDEPEND="${DEPEND}"
 
 src_unpack() {
 	distutils_src_unpack
-	
+
 	if use lapack; then
 		sed -i  \
 			-e "s:Rlapack:lapack:" \
@@ -34,19 +34,19 @@ src_unpack() {
 			-e "s:'Rlapack'::" \
 			setup.py || die "sed in setup.py failed"
 	fi
-	
+
 	epatch ${FILESDIR}/${P}-version-detect.patch
 	epatch ${FILESDIR}/${P}-lib-handling.patch
 }
 
 src_install() {
 	distutils_src_install
-	
+
 	if use examples; then
 		insinto /usr/share/doc/${PF}/examples
 		doins -r examples/*
 	fi
-	
+
 	# add R libs to ld.so.conf
 	doenvd "${FILESDIR}/90rpy"
 }
