@@ -14,8 +14,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~ia64 ~x86"
 IUSE="examples lapack"
 
-DEPEND="virtual/python
-	>=dev-lang/R-2.3
+DEPEND=">=dev-lang/R-2.3
 	dev-python/numpy
 	lapack? ( virtual/lapack )"
 RDEPEND="${DEPEND}"
@@ -33,7 +32,7 @@ src_unpack() {
 	else
 		sed -i \
 			-e "s:'Rlapack'::" \
-			setup.py || die "sed in setup.py failed"
+			setup.py || die "sed in setup.py failed"
 	fi
 
 	epatch "${FILESDIR}/${P}-version-detect.patch"
@@ -44,8 +43,8 @@ src_install() {
 	distutils_src_install
 
 	if use examples; then
-		insinto /usr/share/doc/${PF}/examples
-		doins -r examples/*
+		insinto /usr/share/doc/${PF}
+		doins -r examples
 	fi
 
 	# add R libs to ld.so.conf
