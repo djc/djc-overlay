@@ -1,12 +1,13 @@
 # Copyright 1999-2007 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-python/rpy/rpy-0.99.2-r1.ebuild,v 1.1 2007/09/27 07:34:16 hawking Exp $
+# $Header: $
 
 inherit distutils eutils
 
+MY_P="${P/_rc/-RC}"
 DESCRIPTION="RPy is a very simple, yet robust, Python interface to the R Programming Language."
 HOMEPAGE="http://rpy.sourceforge.net/"
-SRC_URI="mirror://sourceforge/rpy/${P}.tar.gz"
+SRC_URI="mirror://sourceforge/rpy/${MY_P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -15,9 +16,11 @@ IUSE="examples lapack"
 
 DEPEND="virtual/python
 	>=dev-lang/R-2.3
-	dev-python/numeric
+	dev-python/numpy
 	lapack? ( virtual/lapack )"
 RDEPEND="${DEPEND}"
+
+S=${WORKDIR}/${MY_P}
 
 src_unpack() {
 	distutils_src_unpack
@@ -34,6 +37,7 @@ src_unpack() {
 	fi
 
 	epatch "${FILESDIR}/${P}-version-detect.patch"
+	epatch "${FILESDIR}/${P}-lib-handling.patch"
 }
 
 src_install() {
