@@ -52,5 +52,5 @@ src_install() {
 }
 
 pkg_postinst() {
-	env-update
+	elog "You'll have to run env-update in order to find the R libraries."
 }
