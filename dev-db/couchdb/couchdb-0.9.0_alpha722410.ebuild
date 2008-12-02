@@ -1,8 +1,6 @@
 # Copyright 1999-2008 Patrick Hahn / Vicente Jimenez Aguilar / Lars Strojny
 # Distributed under the terms of the GNU General Public License v2
 
-inherit distutils versionator
-
 DESCRIPTION="Apache CouchDB is a distributed, fault-tolerant and schema-free
 document-oriented database accessible via a RESTful HTTP/JSON API.
 Among other features, it provides robust, incremental replication with
@@ -20,7 +18,6 @@ RESTRICT="test nomirror" #72375
 
 RDEPEND="dev-libs/icu
 		dev-lang/erlang
-		dev-util/svn2cl
 		dev-lang/spidermonkey"
 DEPEND="${RDEPEND}"
 
