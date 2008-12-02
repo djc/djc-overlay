@@ -1,0 +1,35 @@
+#!/sbin/runscript
+# Copyright 2008 Dirkjan Ochtman
+# Distributed under the terms of the GNU General Public License v2
+
+depend() {
+	need net
+}
+
+start() {
+	ebegin "Starting ${SVCNAME}"
+
+	args="-b"
+	if test -n "$COUCHDB_STDOUT_FILE"; then
+		args="$args -o $COUCHDB_STDOUT_FILE"
+	fi
+	if test -n "$COUCHDB_STDERR_FILE"; then
+		args="$args -e $COUCHDB_STDERR_FILE"
+	fi
+	if test -n "$COUCHDB_RESPAWN_TIMEOUT"; then
+		args="$args -r $COUCHDB_RESPAWN_TIMEOUT"
+	fi
+	if test -n "$COUCHDB_OPTIONS"; then
+		args="$args $COUCHDB_OPTIONS"
+	fi
+
+	start-stop-daemon --start --exec /usr/bin/couchdb --name ${SVCNAME} \
+		--pidfile /var/run/couchdb/couchdb.pid -- $args
+}
+
+stop() {
+	ebegin "Stopping ${SVCNAME}"
+	start-stop-daemon --stop --quiet --exec /usr/bin/couchdb --name ${SVCNAME} \
+		--pidfile /var/run/couchdb/couchdb.pid
+	eend $?
+}

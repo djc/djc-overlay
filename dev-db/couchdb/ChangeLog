@@ -1,0 +1,9 @@
+# ChangeLog for dev-db/couchdb
+# Copyright 1999-2008 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+  24 Aug 2008; Lars Strojny <lstrojny@mediaventures.de>
+  +couchdb-0.8.1.ebuild:
+  Initial addition. Based on work by Patrick Hahn
+  (https://bugs.gentoo.org/show_bug.cgi?id=197176)
+
