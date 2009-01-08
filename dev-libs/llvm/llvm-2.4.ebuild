@@ -45,13 +45,13 @@ MY_LLVM_GCC_PREFIX=/usr/lib/llvm-gcc
 # this same variable is located in llvm-gcc's ebuild; keep them in sync
 
 pkg_setup() {
-	
+
 	broken_gcc=( 3.2.2 3.2.3 3.3.2 4.1.1 )
 	broken_gcc_x86=( 3.4.0 3.4.2 )
 	broken_gcc_amd64=( 3.4.6 )
-	
+
 	gcc_vers=`gcc-fullversion`
-	
+
 	for version in ${broken_gcc[@]}
 	do
 		if [ "$gcc_vers" = "$version" ]; then
@@ -136,13 +136,13 @@ src_unpack() {
 	# This patch solves the PIC code generation for 64bits platforms. It is
 	# activated with a USE flag, so users know what they are doing
 	if use amd64 && use pic; then
-		epatch "${FILESDIR}"/llvm-2.3-64bits-pic.patch
+		epatch "${FILESDIR}"/llvm-${PV}-64bits-pic.patch
 		elog "PIC code generation for 64 bits -> patch applied"
 	fi
-	
-	epatch "${FILESDIR}"/llvm-2.3-dont-build-hello.patch
-	epatch "${FILESDIR}"/llvm-2.3-disable-strip.patch
-	
+
+	epatch "${FILESDIR}"/llvm-${PV}-dont-build-hello.patch
+	epatch "${FILESDIR}"/llvm-${PV}-disable-strip.patch
+
 }
 
 
@@ -157,7 +157,7 @@ src_compile() {
 		CONF_FLAGS="${CONF_FLAGS} --enable-optimized --disable-assertions \
 --disable-expensive-checks"
 	fi
-	
+
 	if use alltargets; then
 		CONF_FLAGS="${CONF_FLAGS} --enable-targets=all"
 	else
@@ -215,5 +215,3 @@ src_install()
 			-i "${D}/etc/llvm/$X" || "sed failed"
 	done
 }
-
-
