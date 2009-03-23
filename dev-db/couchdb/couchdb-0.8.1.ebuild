@@ -1,59 +1,51 @@
-# Copyright 1999-2008 Patrick Hahn / Vicente Jimenez Aguilar / Lars Strojny
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/dev-db/couchdb/couchdb-0.8.1.ebuild,v 1.1 2009/03/22 21:27:43 caleb Exp $
 
-inherit distutils
+inherit eutils distutils
 
-DESCRIPTION="Apache CouchDB is a distributed, fault-tolerant and schema-free document-oriented database accessible via a RESTful HTTP/JSON API. Among other features, it provides robust, incremental replication with bi-directional
-conflict detection and resolution, and is queryable and indexable using a table-oriented view engine with JavaScript acting as the default view definition language."
-HOMEPAGE="http://incubator.apache.org/couchdb/"
-SRC_URI="mirror://apache/incubator/${PN}/${PV}-incubating/apache-${P}-incubating.tar.gz"
+DESCRIPTION="Apache CouchDB is a distributed, fault-tolerant and schema-free document-oriented database."
+HOMEPAGE="http://couchdb.apache.org/"
+SRC_URI="mirror://apache/incubator/couchdb/${PV}-incubating/apache-${P}-incubating.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~x86 ~amd64"
 IUSE=""
-RESTRICT="test nomirror" #72375
+RESTRICT="test mirror" #72375
 
 RDEPEND="dev-libs/icu
 		dev-lang/erlang
-		dev-util/svn2cl
+		>=dev-libs/openssl-0.9.8j
+		>=net-misc/curl-7.18.2
 		dev-lang/spidermonkey"
 
 DEPEND="${RDEPEND}"
 
-S=${WORKDIR}/apache-${P}-incubating
+S="${WORKDIR}/apache-${P}-incubating"
 
 pkg_setup() {
-	enewgroup couchdb 
-	enewuser couchdb -1 /bin/bash /var/lib couchdb
-}
-
-src_unpack() {
-	unpack ${A}
-	cd ${S}
-	sed -ie \
-		's/COUCHDB_PID_FILE=.*/COUCHDB_PID_FILE=\/var\/run\/couchdb\/couchdb.pid/' \
-		etc/default/couchdb.tpl.in || die
+	enewgroup couchdb
+	enewuser couchdb -1 /bin/bash /var/lib/couchdb couchdb
 }
 
 src_compile() {
 	./bootstrap
-	econf \
-		--with-erlang=/usr/lib/erlang/usr/include \
-		--localstatedir="/var" || die
-	emake || die
+	econf --with-erlang=/usr/lib/erlang/usr/include --prefix=/usr \
+		--localstatedir=/var || die "configure failed"
+	emake || die "make failed"
 }
 
 src_install() {
 	emake DESTDIR="${D}" install || die "install failed"
 
-	touch couchdb.pid
 	insinto /var/run/couchdb
-	doins couchdb.pid
 
 	fowners couchdb:couchdb \
 		/var/run/couchdb \
-		/var/run/couchdb/couchdb.pid \
 		/var/lib/couchdb \
 		/var/log/couchdb
+
+	newinitd "${FILESDIR}/couchdb.init-0.8.1" couchdb || die
+	newconfd "${FILESDIR}/couchdb.conf-0.8.1" couchdb || die
 }
