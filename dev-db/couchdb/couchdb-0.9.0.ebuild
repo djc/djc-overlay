@@ -1,11 +1,12 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/dev-db/couchdb/couchdb-0.8.1.ebuild,v 1.1 2009/03/22 21:27:43 caleb Exp $
 
 inherit eutils distutils
 
 DESCRIPTION="Apache CouchDB is a distributed, fault-tolerant and schema-free document-oriented database."
 HOMEPAGE="http://couchdb.apache.org/"
-SRC_URI="http://build.couchdb.org/apache-couchdb-20090319090301.tar.gz"
+SRC_URI="mirror://apache/couchdb/${PV}/apache-${P}.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
@@ -21,7 +22,7 @@ RDEPEND="dev-libs/icu
 
 DEPEND="${RDEPEND}"
 
-S="${WORKDIR}/apache-${P/_alpha/a}"
+S="${WORKDIR}/apache-${P}"
 
 pkg_setup() {
 	enewgroup couchdb
@@ -29,6 +30,7 @@ pkg_setup() {
 }
 
 src_compile() {
+	./bootstrap
 	econf --with-erlang=/usr/lib/erlang/usr/include --prefix=/usr \
 		--localstatedir=/var || die "configure failed"
 	emake || die "make failed"

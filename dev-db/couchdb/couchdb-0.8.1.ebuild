@@ -6,7 +6,7 @@ inherit eutils distutils
 
 DESCRIPTION="Apache CouchDB is a distributed, fault-tolerant and schema-free document-oriented database."
 HOMEPAGE="http://couchdb.apache.org/"
-SRC_URI="mirror://apache/incubator/couchdb/${PV}-incubating/apache-${P}-incubating.tar.gz"
+SRC_URI="mirror://apache/couchdb/${PV}-incubating/apache-${P}-incubating.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
