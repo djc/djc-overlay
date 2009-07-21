@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header:$
+# $Header: /var/cvsroot/gentoo-x86/dev-python/couchdb-python/couchdb-python-0.6.ebuild,v 1.1 2009/07/16 21:55:07 patrick Exp $
 
 EAPI=1
 
@@ -13,7 +13,7 @@ SRC_URI="http://pypi.python.org/packages/source/C/CouchDB/CouchDB-${PV}.tar.gz"
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="~x86 ~amd64"
-IUSE="doc test"
+IUSE="doc"
 
 RDEPEND="dev-python/httplib2
 	|| ( >=dev-lang/python-2.6
@@ -33,8 +33,4 @@ src_install() {
 	fi
 
 	dohtml -r doc/* || die
-}
-
-src_test() {
-	python __init__.py
 }
