@@ -12,7 +12,7 @@ SRC_URI="mirror://apache/couchdb/${PV}/apache-${P}.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="~amd64 ~x86"
 IUSE=""
 RESTRICT="test mirror" #72375
 
@@ -32,7 +32,6 @@ pkg_setup() {
 }
 
 src_configure() {
-	./bootstrap
 	econf --with-erlang=/usr/lib/erlang/usr/include --prefix=/usr \
 		--localstatedir=/var || die "configure failed"
 }
@@ -51,8 +50,8 @@ src_install() {
 		/var/lib/couchdb \
 		/var/log/couchdb
 
-	newinitd "${FILESDIR}/couchdb.init-0.9" couchdb || die
-	newconfd "${FILESDIR}/couchdb.conf-0.9" couchdb || die
+	newinitd "${FILESDIR}/couchdb.init-0.10" couchdb || die
+	newconfd "${FILESDIR}/couchdb.conf-0.10" couchdb || die
 
 	sed -i -e "s:LIBDIR:$(get_libdir):" "${D}/etc/conf.d/couchdb"
 }
