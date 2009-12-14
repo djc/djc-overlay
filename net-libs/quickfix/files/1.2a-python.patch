@@ -1,0 +1,42 @@
+--- src/python/Makefile.am.old	2009-12-14 18:15:55.000000000 +0100
++++ src/python/Makefile.am	2009-12-14 18:15:37.000000000 +0100
+@@ -4,34 +4,15 @@
+ 
+ pkgdata_DATA = quickfix.py quickfix40.py quickfix41.py quickfix42.py quickfix43.py quickfix44.py
+ 
+-all-local:
+-	mkdir -p $(top_builddir)/lib/python
+-	ln -sf ../../src/python/.libs/libquickfix_python.so $(top_builddir)/lib/python/_quickfix.so 
+-	ln -sf ../../src/python/.libs/libquickfix_python.dylib $(top_builddir)/lib/python/_quickfix.dylib 
+-	ln -sf ../../src/python/quickfix.py $(top_builddir)/lib/python/quickfix.py
+-	ln -sf ../../src/python/quickfix40.py $(top_builddir)/lib/python/quickfix40.py
+-	ln -sf ../../src/python/quickfix41.py $(top_builddir)/lib/python/quickfix41.py
+-	ln -sf ../../src/python/quickfix42.py $(top_builddir)/lib/python/quickfix42.py
+-	ln -sf ../../src/python/quickfix43.py $(top_builddir)/lib/python/quickfix43.py
+-	ln -sf ../../src/python/quickfix44.py $(top_builddir)/lib/python/quickfix44.py
+-
+-	bash ./link.sh $(top_builddir)/lib/python _quickfix.so _quickfix.dylib
+-
+ clean-local:
+ 	rm -rf $(top_builddir)/lib/python
+ 
+ install-exec-local:
+-	rm -rf $(PYTHON_SITE_PACKAGES)/python/_quickfix.so
+-	rm -rf $(PYTHON_SITE_PACKAGES)/python/_quickfix.dylib
+-	rm -rf $(PYTHON_SITE_PACKAGES)/python/quickfix.py
+-	rm -rf $(PYTHON_SITE_PACKAGES)/python/quickfix40.py
+-	rm -rf $(PYTHON_SITE_PACKAGES)/python/quickfix41.py
+-	rm -rf $(PYTHON_SITE_PACKAGES)/python/quickfix42.py
+-	rm -rf $(PYTHON_SITE_PACKAGES)/python/quickfix43.py
+-	rm -rf $(PYTHON_SITE_PACKAGES)/python/quickfix44.py
+-	ln -sf $(prefix)/lib/python/_quickfix.so $(PYTHON_SITE_PACKAGES)/_quickfix.so
+-	ln -sf $(prefix)/lib/python/_quickfix.dylib $(PYTHON_SITE_PACKAGES)/_quickfix.dylib
+-	cp $(top_builddir)/lib/python/*.py $(PYTHON_SITE_PACKAGES)
++	mkdir -p $(DESTDIR)$(PYTHON_SITE_PACKAGES)/quickfix
++	cp *.py $(DESTDIR)$(PYTHON_SITE_PACKAGES)/quickfix/
++	cp ../../src/python/.libs/libquickfix_python.so $(DESTDIR)$(PYTHON_SITE_PACKAGES)/quickfix/_quickfix.so
++	mv $(DESTDIR)$(PYTHON_SITE_PACKAGES)/quickfix/{quickfix,__init__}.py
++	cp ../../src/python/.libs/libquickfix_python.so $(DESTDIR)$(PYTHON_SITE_PACKAGES)/quickfix/
+ 
+ uninstall-local:
+ 	rm -rf $(PYTHON_SITE_PACKAGES)/_quickfix.so
