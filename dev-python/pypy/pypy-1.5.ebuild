@@ -47,20 +47,20 @@ src_compile() {
 		conf="-O2"
 	fi
 	if use sandbox; then
-		conf += " --sandbox"
+		conf+=" --sandbox"
 	fi
 	if use stackless; then
-		conf += " --stackless"
+		conf+=" --stackless"
 	fi
-	conf += " ./pypy/translator/goal/targetpypystandalone"
+	conf+=" ./pypy/translator/goal/targetpypystandalone"
 	# Avoid linking against libraries disabled by use flags
 	optional_use=("bzip2" "ncurses" "xml" "ssl")
 	optional_mod=("bz2" "_minimal_curses" "pyexpat" "_ssl")
 	for ((i = 0; i < ${#optional_use[*]}; i++)); do
 		if use ${optional_use[$i]};	then
-			conf += " --withmod-${optional_mod[$i]}"
+			conf+=" --withmod-${optional_mod[$i]}"
 		else
-			conf += " --withoutmod-${optional_mod[$i]}"
+			conf+=" --withoutmod-${optional_mod[$i]}"
 		fi
 	done
 
