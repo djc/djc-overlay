@@ -18,11 +18,9 @@ PYTHON_ABI="2.7-pypy-${SLOTVER}"
 KEYWORDS="~amd64"
 IUSE="doc examples +jit sandbox stackless test bzip2 ncurses xml ssl"
 
-RDEPEND=">=app-admin/eselect-python-20091230
-		>=sys-libs/zlib-1.1.3
+RDEPEND=">=sys-libs/zlib-1.1.3
 		virtual/libffi
 		virtual/libintl
-		sys-devel/gcc
 		bzip2? ( app-arch/bzip2 )
 		ncurses? ( sys-libs/ncurses )
 		xml? ( dev-libs/expat )
@@ -74,8 +72,9 @@ src_install() {
 	insinto ${INSPATH}
 	doins -r include lib_pypy lib-python pypy-c || die "failed"
 	fperms a+x ${INSPATH}/pypy-c || die "failed"
+	dosym ../$(get_libdir)/pypy${SLOT}/pypy-c /usr/bin/pypy-c${SLOT}
 }
 
 src_test() {
-	./pypy/test_all.py --pypy=./pypy-c lib-python
+	$(PYTHON -2) ./pypy/test_all.py --pypy=./pypy-c lib-python
 }
