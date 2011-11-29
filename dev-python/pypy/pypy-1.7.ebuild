@@ -9,7 +9,7 @@ inherit eutils toolchain-funcs check-reqs python versionator
 DESCRIPTION="PyPy is a very compliant implementation of the Python language with
 aim to improve speed of execution"
 HOMEPAGE="http://pypy.org/"
-SRC_URI="http://pypy.org/download/pypy-${PV}-src.tar.bz2"
+SRC_URI="https://bitbucket.org/pypy/pypy/get/release-${PV}.tar.bz2"
 SLOTVER=$(get_version_component_range 1-2 ${PV})
 
 LICENSE="MIT"
@@ -28,17 +28,19 @@ RDEPEND=">=sys-libs/zlib-1.1.3
 DEPEND="${RDEPEND}"
 PDEPEND="app-admin/python-updater"
 
-S="${WORKDIR}/${P}-src"
+S="${WORKDIR}/${PN}-pypy-release-${PV}"
 DOC="README LICENSE"
 
+CHECKREQS_MEMORY="1250M"
+use amd64 && CHECKREQS_MEMORY="2500M"
+
 src_prepare() {
-	CHECKREQS_MEMORY="1250"
-	use amd64 && CHECKREQS_MEMORY="2500"
-	check_reqs
 	epatch "${FILESDIR}/${PV}-patches.patch"
+	epatch "${FILESDIR}/${PV}-scripts-location.patch"
 }
 
 src_compile() {
+
 	if use jit; then
 		conf="-Ojit"
 	else
@@ -50,7 +52,8 @@ src_compile() {
 	if use stackless; then
 		conf+=" --stackless"
 	fi
-	conf+=" ./pypy/translator/goal/targetpypystandalone"
+
+	conf+=" ./pypy-pypy-release-${PV}/pypy/translator/goal/targetpypystandalone.py"
 	# Avoid linking against libraries disabled by use flags
 	optional_use=("bzip2" "ncurses" "xml" "ssl")
 	optional_mod=("bz2" "_minimal_curses" "pyexpat" "_ssl")
@@ -62,7 +65,7 @@ src_compile() {
 		fi
 	done
 
-	translate_cmd="$(PYTHON -2) ./pypy/translator/goal/translate.py $conf"
+	translate_cmd="$(PYTHON -2) ./pypy-pypy-release-${PV}/pypy/translator/goal/translate.py $conf"
 	echo ${_BOLD}"${translate_cmd}"${_NORMAL}
 	${translate_cmd} || die "compile error"
 }
