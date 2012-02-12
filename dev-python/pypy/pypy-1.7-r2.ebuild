@@ -1,6 +1,6 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-python/pypy/pypy-1.7.ebuild,v 1.5 2012/01/16 05:26:31 mr_bones_ Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-python/pypy/pypy-1.7-r2.ebuild,v 1.2 2012/02/02 22:04:21 floppym Exp $
 
 EAPI="4"
 
@@ -15,15 +15,16 @@ LICENSE="MIT"
 SLOT="${SLOTVER}"
 PYTHON_ABI="2.7-pypy-${SLOTVER}"
 KEYWORDS="~amd64 ~x86"
-IUSE="doc examples +jit sandbox test bzip2 ncurses xml ssl"
+IUSE="bzip2 doc examples +jit ncurses sandbox sqlite ssl xml"
 
 RDEPEND=">=sys-libs/zlib-1.1.3
 		virtual/libffi
 		virtual/libintl
 		bzip2? ( app-arch/bzip2 )
 		ncurses? ( sys-libs/ncurses )
-		xml? ( dev-libs/expat )
-		ssl? ( dev-libs/openssl )"
+		sqlite? ( dev-db/sqlite:3 )
+		ssl? ( dev-libs/openssl )
+		xml? ( dev-libs/expat )"
 DEPEND="${RDEPEND}"
 PDEPEND="app-admin/python-updater"
 
@@ -40,10 +41,12 @@ pkg_pretend() {
 src_prepare() {
 	epatch "${FILESDIR}/${PV}-patches.patch"
 	epatch "${FILESDIR}/${PV}-scripts-location.patch"
+	epatch "${FILESDIR}/${P}-distutils.unixccompiler.UnixCCompiler.runtime_library_dir_option.patch"
+	epatch "${FILESDIR}/${P}-distutils-fix_handling_of_executables_and_flags.patch"
 }
 
 src_compile() {
-
+	local conf
 	if use jit; then
 		conf="-Ojit"
 	else
@@ -55,8 +58,8 @@ src_compile() {
 
 	conf+=" ./pypy/translator/goal/targetpypystandalone.py"
 	# Avoid linking against libraries disabled by use flags
-	optional_use=("bzip2" "ncurses" "xml" "ssl")
-	optional_mod=("bz2" "_minimal_curses" "pyexpat" "_ssl")
+	local optional_use=("bzip2" "ncurses" "xml" "ssl")
+	local optional_mod=("bz2" "_minimal_curses" "pyexpat" "_ssl")
 	for ((i = 0; i < ${#optional_use[*]}; i++)); do
 		if use ${optional_use[$i]};	then
 			conf+=" --withmod-${optional_mod[$i]}"
@@ -65,17 +68,23 @@ src_compile() {
 		fi
 	done
 
-	translate_cmd="$(PYTHON -2) ./pypy/translator/goal/translate.py $conf"
+	local translate_cmd="$(PYTHON -2) ./pypy/translator/goal/translate.py $conf"
 	echo ${_BOLD}"${translate_cmd}"${_NORMAL}
 	${translate_cmd} || die "compile error"
 }
 
 src_install() {
-	INSPATH="/usr/$(get_libdir)/pypy${SLOT}"
+	local INSPATH="/usr/$(get_libdir)/pypy${SLOT}"
 	insinto ${INSPATH}
 	doins -r include lib_pypy lib-python pypy-c
 	fperms a+x ${INSPATH}/pypy-c
 	dosym ../$(get_libdir)/pypy${SLOT}/pypy-c /usr/bin/pypy-c${SLOT}
+
+	if ! use sqlite; then
+		rm -fr "${ED}${INSPATH}/lib-python/2.7/sqlite3"
+		rm -fr "${ED}${INSPATH}/lib-python/modified-2.7/sqlite3"
+		rm -f "${ED}${INSPATH}/lib_pypy/_sqlite3.py"
+	fi
 }
 
 src_test() {
