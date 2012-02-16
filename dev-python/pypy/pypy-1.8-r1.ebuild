@@ -42,7 +42,9 @@ src_unpack() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/1.7-patches.patch"
+	epatch "${FILESDIR}/${PV}-elf-metadata-26a8d3fc57a7.patch"
+	epatch "${FILESDIR}/${PV}-sext-instructions-02dc2f6160ee.patch"
+	epatch "${FILESDIR}/${PV}-openssl-include.patch"
 	epatch "${FILESDIR}/1.7-scripts-location.patch"
 	epatch "${FILESDIR}/pypy-1.7-distutils.unixccompiler.UnixCCompiler.runtime_library_dir_option.patch"
 	epatch "${FILESDIR}/pypy-1.7-distutils-fix_handling_of_executables_and_flags.patch"
@@ -74,7 +76,7 @@ src_compile() {
 		fi
 	done
 
-	local translate_cmd="$(PYTHON -2) ./pypy/translator/goal/translate.py $conf"
+	local translate_cmd="$(PYTHON -2) ./pypy/translator/goal/translate.py --batch $conf"
 	echo ${_BOLD}"${translate_cmd}"${_NORMAL}
 	${translate_cmd} || die "compile error"
 }

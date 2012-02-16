@@ -1,0 +1,10 @@
+--- pypy-pypy-release-1.7/pypy/rlib/ropenssl.py.bak	2011-11-29 14:19:10.000000000 +0100
++++ pypy-pypy-release-1.7/pypy/rlib/ropenssl.py	2011-11-29 14:19:42.000000000 +0100
+@@ -159,6 +159,7 @@
+              lltype.Void)
+ 
+ if HAVE_OPENSSL_RAND:
++    eci.includes = eci.includes + ('openssl/rand.h',)
+     ssl_external('RAND_add', [rffi.CCHARP, rffi.INT, rffi.DOUBLE], lltype.Void)
+     ssl_external('RAND_status', [], rffi.INT)
+     ssl_external('RAND_egd', [rffi.CCHARP], rffi.INT)
