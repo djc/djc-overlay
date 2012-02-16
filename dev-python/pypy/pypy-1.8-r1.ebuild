@@ -44,7 +44,6 @@ src_unpack() {
 src_prepare() {
 	epatch "${FILESDIR}/${PV}-elf-metadata-26a8d3fc57a7.patch"
 	epatch "${FILESDIR}/${PV}-sext-instructions-02dc2f6160ee.patch"
-	epatch "${FILESDIR}/${PV}-openssl-include.patch"
 	epatch "${FILESDIR}/1.7-scripts-location.patch"
 	epatch "${FILESDIR}/pypy-1.7-distutils.unixccompiler.UnixCCompiler.runtime_library_dir_option.patch"
 	epatch "${FILESDIR}/pypy-1.7-distutils-fix_handling_of_executables_and_flags.patch"
