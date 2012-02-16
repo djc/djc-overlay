@@ -15,16 +15,16 @@ LICENSE="MIT"
 SLOT="${SLOTVER}"
 PYTHON_ABI="2.7-pypy-${SLOTVER}"
 KEYWORDS="~amd64 ~x86"
-IUSE="bzip2 doc examples +jit ncurses sandbox shadowstack sqlite stackless ssl xml"
+IUSE="bzip2 doc examples +jit ncurses sandbox shadowstack sqlite ssl"
 
 RDEPEND=">=sys-libs/zlib-1.1.3
 		virtual/libffi
 		virtual/libintl
+		dev-libs/expat
 		bzip2? ( app-arch/bzip2 )
 		ncurses? ( sys-libs/ncurses )
 		sqlite? ( dev-db/sqlite:3 )
-		ssl? ( dev-libs/openssl )
-		xml? ( dev-libs/expat )"
+		ssl? ( dev-libs/openssl )"
 DEPEND="${RDEPEND}"
 PDEPEND="app-admin/python-updater"
 
@@ -61,14 +61,11 @@ src_compile() {
 	if use sandbox; then
 		conf+=" --sandbox"
 	fi
-	if use stackless; then
-		conf+=" --stackless"
-	fi
 
 	conf+=" ./pypy/translator/goal/targetpypystandalone.py"
 	# Avoid linking against libraries disabled by use flags
-	local optional_use=("bzip2" "ncurses" "xml" "ssl")
-	local optional_mod=("bz2" "_minimal_curses" "pyexpat" "_ssl")
+	local optional_use=("bzip2" "ncurses" "ssl")
+	local optional_mod=("bz2" "_minimal_curses" "_ssl")
 	for ((i = 0; i < ${#optional_use[*]}; i++)); do
 		if use ${optional_use[$i]};	then
 			conf+=" --withmod-${optional_mod[$i]}"
