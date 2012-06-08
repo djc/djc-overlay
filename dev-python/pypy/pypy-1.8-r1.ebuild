@@ -1,6 +1,6 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-python/pypy/pypy-1.8.ebuild,v 1.3 2012/02/12 23:25:42 floppym Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-python/pypy/pypy-1.8-r1.ebuild,v 1.3 2012/02/28 19:24:00 floppym Exp $
 
 EAPI="4"
 
@@ -15,7 +15,7 @@ LICENSE="MIT"
 SLOT="${SLOTVER}"
 PYTHON_ABI="2.7-pypy-${SLOTVER}"
 KEYWORDS="~amd64 ~x86"
-IUSE="bzip2 doc examples +jit ncurses sandbox shadowstack sqlite ssl"
+IUSE="bzip2 doc examples +jit ncurses sandbox shadowstack sqlite ssl +xml"
 
 RDEPEND=">=sys-libs/zlib-1.1.3
 		virtual/libffi
@@ -31,8 +31,8 @@ PDEPEND="app-admin/python-updater"
 DOC="README LICENSE"
 
 pkg_pretend() {
-	CHECKREQS_MEMORY="1250M"
-	use amd64 && CHECKREQS_MEMORY="2500M"
+	CHECKREQS_MEMORY="2G"
+	use amd64 && CHECKREQS_MEMORY="4G"
 	check-reqs_pkg_pretend
 }
 
@@ -92,6 +92,9 @@ src_install() {
 		rm -fr "${ED}${INSPATH}/lib-python/modified-2.7/sqlite3"
 		rm -f "${ED}${INSPATH}/lib_pypy/_sqlite3.py"
 	fi
+
+	# Generate Grammar and PatternGrammar pickles.
+	PYTHONPATH="${ED}${INSPATH}/lib_pypy/__extensions__:${ED}${INSPATH}/lib_pypy:${ED}${INSPATH}/lib-python/modified-2.7:${ED}${INSPATH}/lib-python/2.7" "${ED}${INSPATH}/pypy-c" -c "import lib2to3.pygram, lib2to3.patcomp; lib2to3.patcomp.PatternCompiler()" || die "Generation of Grammar and PatternGrammar pickles failed"
 }
 
 src_test() {
