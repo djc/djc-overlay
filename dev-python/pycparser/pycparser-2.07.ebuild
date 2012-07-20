@@ -10,7 +10,7 @@ DISTUTILS_SRC_TEST="nosetests"
 
 inherit distutils
 
-DESCRIPTION="Standalone version of django.utils.feedgenerator"
+DESCRIPTION="C parser and AST generator written in Python"
 HOMEPAGE="http://code.google.com/p/pycparser/"
 SRC_URI="http://${PN}.googlecode.com/files/${P}.tar.gz"
 
