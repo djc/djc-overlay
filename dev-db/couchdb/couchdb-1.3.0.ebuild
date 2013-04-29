@@ -45,6 +45,10 @@ src_compile() {
 	pax-mark mr src/couchdb/priv/couchjs
 }
 
+src_test() {
+	emake check
+}
+
 src_install() {
 	emake DESTDIR="${D}" install || die "install failed"
 
@@ -66,7 +70,3 @@ src_install() {
 
 	sed -i -e "s:LIBDIR:$(get_libdir):" "${D}/etc/conf.d/couchdb"
 }
-
-#src_test() {
-#	make check
-#}
