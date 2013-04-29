@@ -17,8 +17,12 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 DEPEND=""
-RDEPEND=">=dev-python/requests-1.0.3
+RDEPEND=">=dev-python/requests-1.2.0
 		dev-python/six
 		>=dev-python/update-checker-0.5"
 
 DOCS=""
+
+python_test() {
+	${EPYTHON} setup.py test
+}
