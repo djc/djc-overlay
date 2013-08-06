@@ -4,7 +4,7 @@
 
 EAPI=5
 
-inherit cmake-utils
+inherit cmake-utils eutils
 
 DESCRIPTION="A library to execute a function when a specific event occurs on a file descriptor"
 HOMEPAGE="http://libevent.org/"
@@ -15,8 +15,13 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-RDEPEND="dev-libs/openssl"
-DEPEND="${DEPEND}
-		dev-util/cmake"
+RDEPEND="dev-libs/openssl
+		dev-libs/oniguruma"
+DEPEND="${DEPEND}"
 
 DOCS=( README.markdown )
+
+src_prepare() {
+	rm -r oniguruma
+	epatch "${FILESDIR}/system-oniguruma.patch"
+}
