@@ -8,7 +8,7 @@ inherit autotools eutils
 
 DESCRIPTION="Searpc is a simple C language RPC framework based on GObject system."
 HOMEPAGE="https://github.com/haiwen/libsearpc"
-SRC_URI="http://seafile.googlecode.com/files/seafile-server-${PV}.tar.gz"
+SRC_URI="https://github.com/haiwen/libsearpc/archive/v2.0.3-server.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -18,7 +18,7 @@ IUSE=""
 RDEPEND="dev-libs/glib"
 DEPEND="${RDEPEND}"
 
-S="${WORKDIR}/seafile-${PV}/libsearpc"
+S="${WORKDIR}/${P}-server"
 
 src_prepare() {
 	rm -r json-glib
