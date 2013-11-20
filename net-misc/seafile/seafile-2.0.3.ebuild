@@ -6,11 +6,11 @@ EAPI=5
 PYTHON_COMPAT=( python{2_5,2_6,2_7} )
 PYTHON_REQ_USE="sqlite"
 
-inherit autotools eutils python-r1
+inherit autotools eutils python-r1 vala
 
 DESCRIPTION="A better place for managing documents together."
 HOMEPAGE="https://github.com/haiwen/seafile"
-SRC_URI="http://seafile.googlecode.com/files/seafile-${PV}.tar.gz"
+SRC_URI="https://github.com/haiwen/seafile/archive/v${PV}-server.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -23,19 +23,21 @@ DEPEND="net-libs/ccnet
 		sys-devel/gettext
 		dev-util/pkgconfig"
 
+S="${WORKDIR}/${P}-server"
+
 src_prepare() {
-	rm -r libsearpc ccnet
+	vala_src_prepare
 	epatch "${FILESDIR}/system-json.patch"
 	find -name "Makefile.am" | xargs sed -i 's/@SEARPC_CFLAGS@/@SEARPC_CFLAGS@ @JSONGLIB_CFLAGS@/'
 	find -name "Makefile.am" | xargs sed -i 's/@SEARPC_LIBS@/@SEARPC_LIBS@ @JSONGLIB_LIBS@/'
+	find -name "Makefile.am" | xargs sed -i 's/valac/${VALAC}/' # ugly hack
 	eautoreconf
 }
 
 src_configure() {
 	econf $(use_enable client) \
 		$(use_enable server) \
-		$(use_enable gui) \
-		$(use_enable mysql)
+		$(use_enable gui)
 }
 
 src_compile() {
