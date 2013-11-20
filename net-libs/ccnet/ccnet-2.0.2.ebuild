@@ -8,7 +8,7 @@ inherit autotools eutils
 
 DESCRIPTION="Ccnet is a framework for writing networked applications in C."
 HOMEPAGE="https://github.com/haiwen/ccnet"
-SRC_URI="http://seafile.googlecode.com/files/seafile-${PV}.tar.gz"
+SRC_URI="http://seafile.googlecode.com/files/seafile-server-${PV}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -18,7 +18,6 @@ IUSE="client mysql server"
 DEPEND="dev-lang/vala
 		net-lib/libsearpc
 		dev-db/libzdb
-		dev-db/mysql
 		dev-db/sqlite"
 RDEPEND="${DEPEND}"
 
@@ -34,8 +33,7 @@ src_prepare() {
 src_configure() {
 	econf --enable-console --disable-compile-demo \
 			$(use_enable server) \
-			$(use_enable client) \
-			$(use_enable mysql)
+			$(use_enable client)
 }
 
 src_compile() {
