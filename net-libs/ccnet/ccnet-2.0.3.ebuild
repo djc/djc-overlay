@@ -4,16 +4,16 @@
 
 EAPI=5
 
-inherit autotools eutils
+inherit autotools eutils vala
 
 DESCRIPTION="Ccnet is a framework for writing networked applications in C."
 HOMEPAGE="https://github.com/haiwen/ccnet"
-SRC_URI="http://seafile.googlecode.com/files/seafile-server-${PV}.tar.gz"
+SRC_URI="https://github.com/haiwen/${PN}/archive/v${PV}-server.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="client mysql server"
+IUSE="client server"
 
 DEPEND="dev-lang/vala
 		net-lib/libsearpc
@@ -21,12 +21,14 @@ DEPEND="dev-lang/vala
 		dev-db/sqlite"
 RDEPEND="${DEPEND}"
 
-S="${WORKDIR}/seafile-${PV}/ccnet"
+S="${WORKDIR}/${P}-server"
 
 src_prepare() {
+	vala_src_prepare
 	epatch "${FILESDIR}/system-json-glib.patch"
 	find -name "Makefile.am" | xargs sed -i 's/@GLIB2_CFLAGS@/@GLIB2_CFLAGS@ @JSONGLIB_CFLAGS@/'
 	find -name "Makefile.am" | xargs sed -i 's/@GLIB2_LIBS@/@GLIB2_LIBS@ @JSONGLIB_LIBS@/'
+	find -name "Makefile.am" | xargs sed -i 's/valac/${VALAC}/' # ugly hack
 	eautoreconf
 }
 
