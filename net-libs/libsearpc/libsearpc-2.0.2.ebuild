@@ -8,7 +8,7 @@ inherit autotools eutils
 
 DESCRIPTION="Searpc is a simple C language RPC framework based on GObject system."
 HOMEPAGE="https://github.com/haiwen/libsearpc"
-SRC_URI="http://seafile.googlecode.com/files/seafile-${PV}.tar.gz"
+SRC_URI="http://seafile.googlecode.com/files/seafile-server-${PV}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
