@@ -3,8 +3,9 @@
 # $Header: $
 
 EAPI=5
+PYTHON_COMPAT=( python{2_6,2_7} )
 
-inherit autotools eutils vala
+inherit autotools eutils vala python-single-r1
 
 DESCRIPTION="Ccnet is a framework for writing networked applications in C."
 HOMEPAGE="https://github.com/haiwen/ccnet"
@@ -16,7 +17,9 @@ KEYWORDS="~amd64 ~x86"
 IUSE="client server"
 
 DEPEND="dev-lang/vala
-		net-lib/libsearpc
+		net-libs/libsearpc
+		>=dev-libs/glib-2.0
+		>=dev-lang/vala-0.8
 		dev-db/libzdb
 		dev-db/sqlite"
 RDEPEND="${DEPEND}"
