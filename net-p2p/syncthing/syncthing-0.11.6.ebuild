@@ -4,20 +4,14 @@
 
 EAPI="5"
 
-#if [ "$PV" != "9999" ]; then
-#	SRC_URI="https://github.com/calmh/${PN}/archive/v${PV}.tar.gz"
-#	KEYWORDS="~amd64 ~x86 ~arm ~darwin ~winnt ~fbsd"
-#else
-	vcs="git-r3"
-	SRC_URI=""
-	EGIT_REPO_URI="https://github.com/syncthing/${PN}"
-	KEYWORDS=""
-#fi
-
-inherit eutils base ${vcs}
+inherit eutils base git-r3
 
 DESCRIPTION="Open, trustworthy and decentralized syncing engine (some kind of analog of DropBox and BTSync)"
 HOMEPAGE="http://syncthing.net"
+SRC_URI=""
+EGIT_REPO_URI="https://github.com/syncthing/${PN}"
+EGIT_COMMIT="v${PV}"
+KEYWORDS=""
 
 LICENSE="MIT"
 SLOT="0"
@@ -30,7 +24,7 @@ DEPEND="
 "
 RDEPEND="${DEPEND}"
 
-DOCS=( README.md CONTRIBUTORS LICENSE CONTRIBUTING.md )
+DOCS=( README.md AUTHORS LICENSE CONTRIBUTING.md )
 
 export GOPATH="${S}"
 
@@ -38,21 +32,15 @@ GO_PN="github.com/syncthing/${PN}"
 EGIT_CHECKOUT_DIR="${S}/src/${GO_PN}"
 S="${EGIT_CHECKOUT_DIR}"
 
-src_prepare() {
-	ewarn "Please, do NOT use upgrade-mechanism, integradted in this software"
-	ewarn "We can't trust selfupgrades from precompiled binaries"
-	ewarn "That's why we will not provide any support for binary-upgraded installation."
-}
-
 src_compile() {
 	# XXX: All the stuff below needs for "-version" command to show actual info
-	local version="$(git describe --always)";
+	local version="$(git describe --always | sed 's/\([v\.0-9]*\)\(-\(beta\|alpha\)[0-9]*\)\?-/\1\2+/')";
 	local date="$(git show -s --format=%ct)";
 	local user="$(whoami)"
 	local host="$(hostname)"; host="${host%%.*}";
 	local lf="-w -X main.Version ${version} -X main.BuildStamp ${date} -X main.BuildUser ${user} -X main.BuildHost ${host}"
 
-	godep go build -ldflags "${lf}" ./cmd/syncthing
+	godep go build -ldflags "${lf}" -tags noupgrade ./cmd/syncthing
 
 	use tools && (
 		godep go build ./cmd/stcli
