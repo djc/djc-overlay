@@ -4,7 +4,7 @@
 
 EAPI=5
 
-inherit cmake-utils
+inherit cmake-utils user
 
 DESCRIPTION="Rapid spam filtering system"
 SRC_URI="https://rspamd.com/downloads/${P}.tar.xz"
@@ -26,3 +26,24 @@ DEPEND="dev-libs/libpcre
 		dev-libs/gmime
 		dev-libs/hiredis"
 RDEPEND="${DEPEND}"
+
+pkg_setup() {
+	enewgroup rspamd
+	enewuser rspamd -1 -1 /var/lib/rspamd rspamd
+}
+
+src_install() {
+	cmake-utils_src_install
+	newinitd "${FILESDIR}/rspamd.init" rspamd
+
+	dodir /var/lib/rspamd
+	dodir /var/log/rspamd
+	fowners rspamd:rspamd /var/lib/rspamd /var/log/rspamd
+
+	insinto /etc/rspamd
+	doins conf/*
+	dodir conf/modules.d
+
+	insinto /etc/logrotate.d
+	newins "${FILESDIR}/rspamd.logrotate" rspamd
+}
