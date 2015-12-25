@@ -32,17 +32,24 @@ pkg_setup() {
 	enewuser rspamd -1 -1 /var/lib/rspamd rspamd
 }
 
+src_configure() {
+	local mycmakeargs=(
+		-DCONFDIR=/etc/rspamd
+		-DRUNDIR=/var/run/rspamd
+		-DDBDIR=/var/lib/rspamd
+		-DLOGDIR=/var/log/rspamd
+	)
+	cmake-utils_src_configure
+}
+
 src_install() {
 	cmake-utils_src_install
 	newinitd "${FILESDIR}/rspamd.init" rspamd
 
 	dodir /var/lib/rspamd
 	dodir /var/log/rspamd
-	fowners rspamd:rspamd /var/lib/rspamd /var/log/rspamd
-
-	insinto /etc/rspamd
-	doins conf/*
-	dodir conf/modules.d
+	dodir /var/run/rspamd
+	fowners rspamd:rspamd /var/lib/rspamd /var/log/rspamd /var/run/rspamd
 
 	insinto /etc/logrotate.d
 	newins "${FILESDIR}/rspamd.logrotate" rspamd
