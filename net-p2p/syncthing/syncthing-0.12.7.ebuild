@@ -20,7 +20,7 @@ IUSE="tools"
 
 DEPEND="
 	dev-lang/go
-	app-misc/godep
+	dev-go/godep
 "
 RDEPEND="${DEPEND}"
 
