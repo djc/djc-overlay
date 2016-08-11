@@ -4,7 +4,7 @@
 
 EAPI=5
 
-inherit eutils webapp depend.php
+inherit eutils webapp
 
 DESCRIPTION="Open source web analytics platform"
 HOMEPAGE="https://piwik.org/"
@@ -20,9 +20,12 @@ RDEPEND="
 		dev-lang/php[mysqli]
 		dev-lang/php[mysql]
 	)
+	|| (
+		dev-lang/php[cgi]
+		dev-lang/php[apache2]
+		dev-lang/php[fpm]
+	)
 "
-
-need_php_httpd
 
 S="${WORKDIR}/${PN}"
 
