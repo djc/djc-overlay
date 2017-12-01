@@ -1,0 +1,10 @@
+--- a/setup.py.bak	2017-12-01 13:53:35.091846992 +0100
++++ b/setup.py	2017-12-01 13:53:42.058917241 +0100
+@@ -44,7 +44,6 @@
+       long_description=README,
+       package_data={'': ['LICENSE.txt'], PACKAGE_NAME: ['*.ini']},
+       packages=find_packages(exclude=['tests', 'tests.*']),
+-      setup_requires=['pytest-runner >=2.1'],
+       tests_require=['betamax >=0.8, <0.9',
+                      'betamax-matchers >=0.3.0, <0.5',
+                      'betamax-serializers >=0.2, <0.3',

@@ -1,6 +1,5 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI="6"
 PYTHON_COMPAT=( python{2_7,3_3,3_4,3_5,3_6} )
@@ -22,6 +21,7 @@ RDEPEND="dev-python/prawcore
 
 DOCS=""
 RESTRICT="test"
+PATCHES=( "${FILESDIR}/5.2.0-no-pytest-runner.patch" )
 
 python_test() {
 	${EPYTHON} setup.py test
